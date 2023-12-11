@@ -7,9 +7,6 @@ from pynput.keyboard import Key, Controller
 
 from translator.TRgoogle import TRgoogle
 
-t = TRgoogle()
-
-print(t.translate("hi"))
 
 class KeyListener(QObject):
     SignalListener = pyqtSignal(int, str, bool)
