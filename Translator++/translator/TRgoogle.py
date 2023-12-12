@@ -32,7 +32,3 @@ class TRgoogle():
             perevedeno = ex
 
         return perevedeno.pronunciation
-
-translator = Translator()
-perevedeno = translator.translate(text="ихихихихиих привет",dest="ru")#language в заначении "ru"- русский
-print(perevedeno.extra_data)
