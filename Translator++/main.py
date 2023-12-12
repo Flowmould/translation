@@ -1,60 +1,61 @@
-from PyQt5.QtCore import Qt, pyqtSignal, QObject
 from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel
-from PyQt5.QtGui import QClipboard
+from PyQt5.QtCore import Qt
+from pynput import mouse
 
-from pynput import mouse, keyboard
-from pynput.keyboard import Key, Controller
+from googletrans import Translator#работает только 3.1.0a0
 
-from translator.TRgoogle import TRgoogle
+class TRgoogle():
+    def translate(self,txt):
+        try:
+            translator = Translator()
+            perevedeno = translator.translate(text=txt,dest="ru")#language в заначении "ru"- русский
 
-
-class KeyListener(QObject):
-    SignalListener = pyqtSignal(int, str, bool)
-    def __init__(self):
-        super().__init__()
-        self.listener = mouse.Listener(on_press=self.key_press)
-
-    def start(self):
-        self.listener.start()
-
-    def key_press(self, x, y, key, press):
-        self.SignalListener.emit(int(x), int(y), str(key), bool(press))
+        except Exception as ex:
+            perevedeno = ex
+            
+        print(perevedeno.text)
+        
+        return perevedeno.text
 
 
 class MainWindow(QMainWindow):
-
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("тест") 
-        self.setWindowFlags(Qt.WindowStaysOnTopHint)#по верх других окн
-        self.setWindowFlags(Qt.FramelessWindowHint)#без верхний часть
+        self.googl = TRgoogle()#костыленок т.к скоро будет выбор переводчика
         
-        self.label.setAlignment(Qt.AlignTop | Qt.AlignLeft)
-        self.setCentralWidget(self.label)
+        self.clipboard = QApplication.clipboard()  # Получаем доступ к буферу обмена
+        self.setWindowFlags(Qt.WindowStaysOnTopHint | Qt.FramelessWindowHint)#настройка окна
+        self.setWindowOpacity(0.5)#прозрачность
         
-        self.keylistener = KeyListener()# на основе класса которы мы зделали
-        self.keylistener.SignalListener.connect(self.key_press)#конект сигнала 
-        self.keylistener.start()#старт слушателя
+        self.label = QLabel(self)  # Создаем метку
+        self.label.setTextInteractionFlags(Qt.TextSelectableByMouse)
 
-    
-    
-    def key_press(self,x,y,key,press):
-        if key == mouse.Button.middle and press:
-            clipboard = QApplication.clipboard()# Получаем доступ к буферу обмена
-            text = clipboard.text()# Получаем текст из буфера обмена
+        self.listener = mouse.Listener(on_click=self.on_mouse_click)# запуск слушателя и указывание фунции которая будет вызвана при нажатии
+        self.listener.start()
 
-            # копи энд преревод
+    def on_mouse_click(self, x, y, key, pressed):
+        
+        if key == mouse.Button.middle and pressed:
+            self.label.setText(self.googl.translate(self.clipboard.text()))#переделать не забыть....
+            self.label.adjustSize()
+            
+            self.setFixedSize(self.label.sizeHint())#окно размером с метку
+            self.move(x, y)# Перемещаем окно на координаты курсора
+            
+            self.show()
+            print("Действия при нажатии колеса кнопки мыши")
+            
+        elif not self.geometry().contains(x, y):
+            self.hide()
+            print("нажатие за пределом окна ")
+        
+    def closeEvent(self, event):
+        self.listener.stop()
+        event.accept()
 
-            self.label.setText(txt)
-
-            self.setGeometry(x,y,0,0)
-
-            # короче надо зделать копирование тхт,
-            # табличка с текстом
-            # c переведным
-            #прорабоать мех закрытия 
-            # ну и все... ainWiMndow
-            # а еще зделать обработчик нажатия 
-        if key != mouse.Button.middle and pressed:
-            pass
+if __name__ == "__main__":
+    app = QApplication([])
+    window = MainWindow()
+    window.show()
+    app.exec()
 
