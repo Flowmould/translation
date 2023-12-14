@@ -1,0 +1,80 @@
+from translatepy.translate import Translate
+#
+from translatepy.translators.yandex import YandexTranslate
+from translatepy.translators.google import GoogleTranslate
+
+from translatepy.translators.libre import LibreTranslate
+from translatepy.translators.mymemory import MyMemoryTranslate
+from translatepy.translators.reverso import ReversoTranslate
+from translatepy.translators.translatecom import TranslateComTranslate
+
+# не работают/ не работает на территории рф
+
+from translatepy.translators.bing import BingTranslate
+from translatepy.translators.deepl import DeeplTranslate
+from translatepy.translators.microsoft import MicrosoftTranslate
+
+
+class translators():
+    def translatE(txt,out,src):
+        translatE = Translate(txt,out,src)
+        print("translatE")
+        return translatE
+    
+    def GoogleTranslator(txt,out,src): 
+        GoogleTranslator = GoogleTranslate()
+        translation = GoogleTranslator.translate(txt , out , src)# perevod 2  , input txt 1 , src yazyk 3
+        print("Google")
+        return translation
+    
+    def YandexTranslator(txt , out , src):
+        YandexTranslator = YandexTranslate()
+        translation = YandexTranslator.translate(txt, out, src)
+        print("Yandex")
+        return translation
+    
+    # менее популяр
+
+    def LibreTranslator(txt , out , src):
+        LibreTranslator = LibreTranslate()
+        translation = LibreTranslator.translate(txt, out, src)
+        print("Libre")
+        return translation
+
+    def MyMemoryTranslator(txt, out, src):
+        MyMemoryTranslator = MyMemoryTranslate()
+        translation = MyMemoryTranslator.translate(txt, out, src)
+        print("MyMemory")
+        return translation
+        
+    def ReversoTranslator(txt , out , src):
+        ReversoTranslator =  ReversoTranslate()
+        translation = ReversoTranslator.translate(txt, out, src)
+        print("Reverso")
+        return translation
+        
+    def TranslateComTranslator(txt, out, src):
+        TranslateComTranslator = TranslateComTranslate()
+        translation = TranslateComTranslator.translate(txt, out, src)
+        print("TranslateCom")
+        return translation
+
+    # не работают/ не работает на территории рф
+    
+    def BingTranslator(txt, out, src):
+        BingTranslator = BingTranslate()
+        translation = BingTranslator.translate(txt, out, src)
+        print("Bing")
+        return translation
+    
+    def DeeplTranslor(txt, out, src):
+        DeeplTranslor = DeeplTranslate()
+        translation = DeeplTranslor.translate(txt, out, src)
+        print("Deepl")
+        return translation
+    
+    def MicrosoftTranslator(txt, out, src):
+        MicrosoftTranslator = MicrosoftTranslate()
+        translation = MicrosoftTranslator.translate(txt, out, src)
+        print("Microsoft")
+        return translation
